@@ -1,8 +1,8 @@
-// src/service/employee/EmployeeServiceMock.test.ts
+// src/service/employee/localFileStorage/EmployeeServiceMock.test.ts
 
-import EmployeesService from "./EmployeesService.ts";
-import { Employee } from "../../model/dtoTypes/Employee.ts";
-import { registerEmployeesService } from "../registry.ts";
+import EmployeesService from "../EmployeesService.ts";
+import { Employee } from "../../../model/dtoTypes/Employee.ts";
+import { registerEmployeesService } from "../../registry.ts";
 
 const FACTORY_KEY = "mock";
 

@@ -1,14 +1,14 @@
-// src/service/employee/AbstractEmployeesServiceSql.ts
+// src/service/employee/sql/AbstractEmployeesServiceSql.ts
 
-import { Employee } from "../../model/dtoTypes/Employee.ts";
-import EmployeesService from "./EmployeesService.ts";
+import { Employee } from "../../../model/dtoTypes/Employee.ts";
+import EmployeesService from "../EmployeesService.ts";
 import knex, { Knex } from "knex";
 import { TABLE_NAME, createEmployeesTable } from "./EmployeesTableSchema.js";
 import { v4 as uuidv4 } from "uuid";
 import {
 	AlreadyExistsError,
 	NotFoundError,
-} from "../../model/errorTypes/employeeErrors.ts";
+} from "../../../model/errorTypes/employeeErrors.ts";
 
 /**
  * AbstractEmployeesServiceSql provides a base implementation for employee management using SQL databases.

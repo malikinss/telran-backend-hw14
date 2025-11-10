@@ -1,8 +1,8 @@
-// src/service/employee/EmployeesServiceSqlite.ts
+// src/service/employee/sql/EmployeesServiceSqlite.ts
 
 import { Knex } from "knex";
-import { registerEmployeesService } from "../registry.ts";
-import { sqliteConfig } from "../../config/dbConfig.ts";
+import { registerEmployeesService } from "../../registry.ts";
+import { sqliteConfig } from "../../../config/dbConfig.ts";
 import AbstractEmployeesServiceSql from "./AbstractEmployeesServiceSql.ts";
 
 /**

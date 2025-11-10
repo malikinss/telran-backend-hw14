@@ -1,9 +1,10 @@
 // src/service/bootstrap.ts
 
-import "./employee/EmployeesServiceMap.ts";
-import "./employee/EmployeesServiceMock.test.ts";
-import "./employee/EmployeesServiceSqlite.ts";
-import ".employee/mongo/EmployeesServiceMongoInMemory.ts";
+import "./employee/sql/EmployeesServiceSqlite.ts";
+import "./employee/localFileStorage/EmployeesServiceMap.ts";
+import "./employee/localFileStorage/EmployeesServiceMock.test.ts";
+import "./employee/mongo/EmployeesServiceMongoInMemory.ts";
+
 import { createEmployeesService } from "./registry.ts";
 
 const key = process.argv[2] || process.env.EMPLOYEES_IMPL;

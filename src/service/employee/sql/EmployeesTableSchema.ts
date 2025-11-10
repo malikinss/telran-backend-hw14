@@ -1,4 +1,4 @@
-// src/service/employee/EmployeesTableSchema.ts
+// src/service/employee/sql/EmployeesTableSchema.ts
 
 import { Knex } from "knex";
 

@@ -1,19 +1,19 @@
-// src/service/employee/EmployeesServiceMap.ts
+// src/service/employee/localFileStorage/EmployeesServiceMap.ts
 
 /**
  * @module EmployeesServiceMap
  */
 
 import { v4 as uuidv4 } from "uuid";
-import { Employee } from "../../model/dtoTypes/Employee.ts";
-import EmployeesService from "./EmployeesService.ts";
-import { fileStorage } from "../../utils/fileStorage.ts";
-import { registerEmployeesService } from "../registry.ts";
+import { Employee } from "../../../model/dtoTypes/Employee.ts";
+import EmployeesService from "../EmployeesService.ts";
+import { fileStorage } from "../../../utils/fileStorage.ts";
+import { registerEmployeesService } from "../../registry.ts";
 import {
 	AlreadyExistsError,
 	NotFoundError,
-} from "../../model/errorTypes/employeeErrors.ts";
-import logger from "../../utils/logger.ts";
+} from "../../../model/errorTypes/employeeErrors.ts";
+import logger from "../../../utils/logger.ts";
 
 const logPrefix = "[EmployeeService]";
 

@@ -1,0 +1,56 @@
+// src/route/employeeRoutes.ts
+
+import express, { RequestHandler } from "express";
+import { auth } from "../middleware/auth/auth.ts";
+import validate from "../middleware/validations/validation.ts";
+import {
+	employeeSchema,
+	employeeSchemaPartial,
+} from "../middleware/validations/schemas/employeeSchema.ts";
+import {
+	getAllEmployees,
+	createEmployee,
+	updateEmployee,
+	deleteEmployee,
+} from "../controller/employeeController.ts";
+
+const router = express.Router();
+
+// Middleware for authorization
+const allAuth: RequestHandler = auth(["USER", "ADMIN"]);
+const adminAuth: RequestHandler = auth(["ADMIN"]);
+
+/**
+ * GET /employees
+ * Retrieves all employees, optionally filtered by department.
+ * Access: USER and ADMIN
+ */
+router.get("/", allAuth, await getAllEmployees);
+
+/**
+ * POST /employees
+ * Creates a new employee.
+ * Access: ADMIN only
+ */
+router.post("/", adminAuth, validate(employeeSchema), await createEmployee);
+
+/**
+ * PATCH /employees/:id
+ * Updates an existing employee partially.
+ * Access: ADMIN only
+ */
+router.patch(
+	"/:id",
+	adminAuth,
+	validate(employeeSchemaPartial),
+	await updateEmployee
+);
+
+/**
+ * DELETE /employees/:id
+ * Deletes an employee by ID.
+ * Access: ADMIN only
+ */
+router.delete("/:id", adminAuth, await deleteEmployee);
+
+export default router;

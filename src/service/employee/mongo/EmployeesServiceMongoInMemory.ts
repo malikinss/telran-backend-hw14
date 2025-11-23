@@ -3,34 +3,83 @@
 import { MongoMemoryServer } from "mongodb-memory-server";
 import AbstractEmployeesServiceMongo from "./AbstractEmployeesServiceMongo.ts";
 import { registerEmployeesService } from "../../registry.ts";
+import {
+	MONGO_DB_NAME,
+	MONGO_COLLECTION_NAME,
+	createInMemoryMongoConfig,
+} from "../../../config/mongoConfig.ts";
 
-const EMPLOYEES_DB_NAME = "employees_db",
-	EMPLOYEES_COLLECTION = "employees";
-
+/**
+ * In-memory MongoDB implementation of the Employees service.
+ *
+ * This service is designed for testing or local development purposes.
+ * It uses `mongodb-memory-server` to create a temporary, in-memory
+ * MongoDB instance that behaves like a real database, but without
+ * requiring a running MongoDB server.
+ *
+ * The database is automatically started during service initialization
+ * and stopped once data is persisted using the `save()` method.
+ */
 class EmployeesServiceMongoInMemory extends AbstractEmployeesServiceMongo {
+	private readonly mongoMemoryServer: MongoMemoryServer;
+
+	/**
+	 * Creates a new in-memory MongoDB Employees service.
+	 *
+	 * @param uri - The connection URI for the in-memory MongoDB instance.
+	 * @param dbName - The name of the in-memory database.
+	 * @param collectionName - The name of the collection where employees are stored.
+	 * @param mongoMemoryServer - The `MongoMemoryServer` instance managing the temporary database.
+	 */
 	constructor(
 		uri: string,
 		dbName: string,
 		collectionName: string,
-		private mongoMemoryServer: MongoMemoryServer
+		mongoMemoryServer: MongoMemoryServer
 	) {
 		super(uri, dbName, collectionName);
+		this.mongoMemoryServer = mongoMemoryServer;
 	}
+
+	/**
+	 * Flushes and closes the in-memory database instance.
+	 *
+	 * Ensures that:
+	 * - All pending write operations are completed.
+	 * - Both Mongo client and in-memory server are gracefully stopped.
+	 *
+	 * @returns A Promise that resolves once the shutdown is complete.
+	 */
 	async save(): Promise<void> {
-		await super.save();
-		this.mongoMemoryServer.stop();
+		try {
+			await super.save();
+		} finally {
+			// Ensures the memory server always stops, even if closing the client fails.
+			await this.mongoMemoryServer.stop();
+		}
 	}
 }
 
-registerEmployeesService("mongoInMemory", async () => {
-	const mongoMemoryServer = new MongoMemoryServer();
-	const uri = mongoMemoryServer.getUri();
-	const serviceInstance = new EmployeesServiceMongoInMemory(
-		uri,
-		EMPLOYEES_DB_NAME,
-		EMPLOYEES_COLLECTION,
-		mongoMemoryServer
-	);
-	await serviceInstance.init();
-	return serviceInstance;
-});
+/**
+ * Registers the `mongoInMemory` employees service in the service registry.
+ *
+ * @async
+ * @function mongoInMemoryFactory
+ * @returns {Promise<EmployeesServiceMongoInMemory>} The initialized service instance.
+ */
+const mongoInMemoryFactory =
+	async (): Promise<EmployeesServiceMongoInMemory> => {
+		const { uri, server } = await createInMemoryMongoConfig();
+		const service = new EmployeesServiceMongoInMemory(
+			uri,
+			MONGO_DB_NAME,
+			MONGO_COLLECTION_NAME,
+			server
+		);
+		await service.init();
+		return service;
+	};
+
+registerEmployeesService("mongoInMemory", mongoInMemoryFactory);
+
+export default EmployeesServiceMongoInMemory;

@@ -79,6 +79,8 @@ abstract class AbstractEmployeesServiceMongo implements EmployeesService {
 
 		try {
 			await this.collection.insertOne(newEmployee);
+			delete (newEmployee as any)._id;
+			/*
 			const employee: Employee = {
 				id: newEmployee.id,
 				avatar: newEmployee.avatar,
@@ -87,7 +89,8 @@ abstract class AbstractEmployeesServiceMongo implements EmployeesService {
 				fullName: newEmployee.fullName,
 				birthDate: newEmployee.birthDate,
 			};
-			return employee;
+			*/
+			return newEmployee;
 		} catch (error: any) {
 			if (error.code === 11000) {
 				throw new AlreadyExistsError(id);

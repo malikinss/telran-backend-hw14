@@ -80,16 +80,6 @@ abstract class AbstractEmployeesServiceMongo implements EmployeesService {
 		try {
 			await this.collection.insertOne(newEmployee);
 			delete (newEmployee as any)._id;
-			/*
-			const employee: Employee = {
-				id: newEmployee.id,
-				avatar: newEmployee.avatar,
-				salary: newEmployee.salary,
-				department: newEmployee.department,
-				fullName: newEmployee.fullName,
-				birthDate: newEmployee.birthDate,
-			};
-			*/
 			return newEmployee;
 		} catch (error: any) {
 			if (error.code === 11000) {
